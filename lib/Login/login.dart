@@ -3,6 +3,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/Login/home.dart';
+import 'package:hotelbooking/pages/homepage.dart';
+import 'package:hotelbooking/pages/roomList.dart';
 import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
@@ -151,14 +153,14 @@ class _LoginState extends State<Login> {
   Future<void> login() async {
     if (passwordController.text.isNotEmpty) {
       var response = await http.post(
-          Uri.parse("http://192.168.1.14:8000/api/login/"),
+          Uri.parse("http://10.0.2.2:8000/api/login/"),
           body: ({
             'username': usernameController.text,
             'password': passwordController.text
           }));
       if (response.statusCode == 200) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => RoomList()));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Invalid Credentails.")));
