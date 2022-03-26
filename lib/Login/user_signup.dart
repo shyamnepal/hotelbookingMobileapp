@@ -26,6 +26,7 @@ class _UserSignupState extends State<UserSignup> {
     });
   }
 
+  TextEditingController _username = TextEditingController();
   TextEditingController _firstname = TextEditingController();
   TextEditingController _lastName = TextEditingController();
   TextEditingController _email = TextEditingController();
@@ -46,12 +47,38 @@ class _UserSignupState extends State<UserSignup> {
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: height * .04, left: width * .04, right: width * .04),
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  controller: _username,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xff242846),
+                    filled: true,
+                    hintText: 'Username',
+                    hintStyle:
+                        const TextStyle(color: Colors.white, fontSize: 15),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                          color: Color(0xff202443), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                          color: Color(0xff202443), width: 2.0),
+                    ),
+                  ),
+                ),
+              ),
 
               //text Fields of last Name
               Padding(
                 padding: EdgeInsets.only(
                     top: height * .04, left: width * .04, right: width * .04),
                 child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   controller: _firstname,
                   decoration: InputDecoration(
                     fillColor: Color(0xff242846),
@@ -78,6 +105,7 @@ class _UserSignupState extends State<UserSignup> {
                 padding: EdgeInsets.only(
                     top: height * .04, left: width * .04, right: width * .04),
                 child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   controller: _lastName,
                   decoration: InputDecoration(
                     fillColor: Color(0xff242846),
@@ -104,6 +132,7 @@ class _UserSignupState extends State<UserSignup> {
                 padding: EdgeInsets.only(
                     top: height * .04, left: width * .04, right: width * .04),
                 child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   controller: _email,
                   decoration: InputDecoration(
                     fillColor: Color(0xff242846),
@@ -130,6 +159,7 @@ class _UserSignupState extends State<UserSignup> {
                 padding: EdgeInsets.only(
                     top: height * .04, left: width * .04, right: width * .04),
                 child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   controller: _password,
                   decoration: InputDecoration(
                     fillColor: Color(0xff242846),
@@ -156,6 +186,7 @@ class _UserSignupState extends State<UserSignup> {
                 padding: EdgeInsets.only(
                     top: height * .04, left: width * .04, right: width * .04),
                 child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   controller: _confirmPassword,
                   cursorColor: Colors.white,
                   decoration: InputDecoration(
@@ -219,7 +250,7 @@ class _UserSignupState extends State<UserSignup> {
   }
 
   Future RegisterProduct() async {
-    String APIURL = "http://192.168.1.14:8000/api/register/";
+    String APIURL = "http://10.0.2.2:8000/api/userregister/";
     // final Map mappeddata = {
     //   'name': _name.text,
     //   'category': _category.text,
@@ -227,15 +258,19 @@ class _UserSignupState extends State<UserSignup> {
     //   'description': _Description.text,
     //   'stars': _status.text,
     // };
+
     UserSignupModel model = new UserSignupModel(
-      firstName: _firstname.text,
-      lastName: _lastName.text,
-      email: _email.text,
+      username: _username.text,
       password: _password.text,
+      password2: _confirmPassword.text,
+      email: _email.text,
+      first_name: _firstname.text,
+      last_name: _lastName.text,
     );
 
     http.Response response =
         await http.post(Uri.parse(APIURL), body: model.toJson());
+    print(model.toJson());
     if (response.statusCode == 200) {
       print("value add");
     } else {
