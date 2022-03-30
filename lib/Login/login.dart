@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/Login/home.dart';
+import 'package:hotelbooking/auth/restpassword.dart';
 import 'package:hotelbooking/pages/homepage.dart';
 import 'package:hotelbooking/pages/roomList.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -102,7 +106,12 @@ class _LoginState extends State<Login> {
             Padding(
               padding: EdgeInsets.only(left: width * .6, top: height * .02),
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ResetPassword()));
+                  },
                   child: Text(
                     'forget password?',
                     style: TextStyle(color: Color(0xff40cd7d)),
@@ -153,14 +162,16 @@ class _LoginState extends State<Login> {
   Future<void> login() async {
     if (passwordController.text.isNotEmpty) {
       var response = await http.post(
-          Uri.parse("http://10.0.2.2:8000/api/login/"),
+          Uri.parse("http://10.0.2.2:8000/api/userlogin/"),
           body: ({
             'username': usernameController.text,
             'password': passwordController.text
           }));
       if (response.statusCode == 200) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RoomList()));
+        final body = jsonDecode(response.body);
+        print("Login Token" + body["jwt"]);
+        //share ppreference to store token
+        pageRoute(body['jwt']);
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Invalid Credentails.")));
@@ -169,5 +180,12 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Black Field NOt Allowed")));
     }
+  }
+
+  void pageRoute(String token) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString("login", token);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => RoomList()));
   }
 }
