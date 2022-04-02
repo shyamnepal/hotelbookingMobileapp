@@ -36,6 +36,24 @@ class _LoginState extends State<Login> {
   var passwordController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkLogin();
+  }
+
+  void checkLogin() async {
+    //Here we check if user login already or credential already
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? val = pref.getString("login");
+    if (val != null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => RoomList()),
+          (route) => false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff202443),
@@ -185,7 +203,7 @@ class _LoginState extends State<Login> {
   void pageRoute(String token) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString("login", token);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RoomList()));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => RoomList()), (route) => false);
   }
 }

@@ -4,9 +4,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/Login/home.dart';
+import 'package:hotelbooking/Login/login.dart';
 import 'package:hotelbooking/component/card.dart';
 import 'package:hotelbooking/pages/detailsscreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RoomList extends StatefulWidget {
   @override
@@ -36,6 +38,7 @@ class _RoomListState extends State<RoomList> {
     // TODO: implement initState
     super.initState();
     fetchRoomData();
+    getcred();
   }
 
   double height = 0;
@@ -46,6 +49,14 @@ class _RoomListState extends State<RoomList> {
     setState(() {
       height = MediaQuery.of(context).size.height;
       width = MediaQuery.of(context).size.width;
+    });
+  }
+
+  String token = "";
+  void getcred() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = pref.getString("login")!;
     });
   }
 
@@ -171,11 +182,18 @@ class _RoomListState extends State<RoomList> {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  await pref.clear();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => Login()),
+                      (route) => false);
+                },
                 child: const ListTile(
-                  title: Text('About'),
+                  title: Text('Logout'),
                   leading: Icon(
-                    Icons.help,
+                    Icons.logout,
                     color: Colors.green,
                   ),
                 ),
@@ -186,6 +204,7 @@ class _RoomListState extends State<RoomList> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Text("Token is ${token}"),
               InkWell(
                 onTap: () {
                   showDialog(

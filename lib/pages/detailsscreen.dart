@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotelbooking/pages/profile.dart';
 
 class DetailScreen extends StatelessWidget {
   //const DetailScreen({Key? key}) : super(key: key);
@@ -25,7 +26,10 @@ class DetailScreen extends StatelessWidget {
               height: 60,
               child: MaterialButton(
                 minWidth: MediaQuery.of(context).size.width * .4,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Profile()));
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 color: Color(0xff3C4657),
