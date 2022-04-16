@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotelbooking/pages/customerdetailsforbooking.dart';
 import 'package:hotelbooking/pages/profile.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -7,8 +8,10 @@ class DetailScreen extends StatelessWidget {
   final imageUrl;
   final hotelName;
   final hotelLocation;
+  final hotelPrice;
 
-  DetailScreen({this.imageUrl, this.hotelName, this.hotelLocation});
+  DetailScreen(
+      {this.imageUrl, this.hotelName, this.hotelLocation, this.hotelPrice});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class DetailScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              "Rs ${hotelLocation}",
+              "Rs ${hotelPrice}",
               style: TextStyle(fontSize: 30),
             ),
             Container(
@@ -27,8 +30,11 @@ class DetailScreen extends StatelessWidget {
               child: MaterialButton(
                 minWidth: MediaQuery.of(context).size.width * .4,
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Profile()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const CustomerDetailsAfterBooking()));
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),

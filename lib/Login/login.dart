@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'dart:convert';
 
@@ -39,19 +39,21 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkLogin();
+    // checkLogin();
   }
 
-  void checkLogin() async {
-    //Here we check if user login already or credential already
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? val = pref.getString("login");
-    if (val != null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => RoomList()),
-          (route) => false);
-    }
-  }
+  // void checkLogin() async {
+  //   //Here we check if user login already or credential already
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   String? val = pref.getString("login");
+  //   if (val != null) {
+  //     print("the value is ");
+  //     print(val);
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //         MaterialPageRoute(builder: (context) => RoomList()),
+  //         (route) => false);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -187,9 +189,10 @@ class _LoginState extends State<Login> {
           }));
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
-        print("Login Token" + body["jwt"]);
+        print("Login Token" + body["access"]);
+
         //share ppreference to store token
-        pageRoute(body['jwt']);
+        pageRoute(body['access'], body['id']);
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Invalid Credentails.")));
@@ -200,9 +203,11 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void pageRoute(String token) async {
+  void pageRoute(String token, id) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString("login", token);
+    await pref.setString("jwt", token);
+    await pref.setString("id", id.toString());
+
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => RoomList()), (route) => false);
   }

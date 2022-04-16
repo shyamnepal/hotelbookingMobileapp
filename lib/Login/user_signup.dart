@@ -266,6 +266,7 @@ class _UserSignupState extends State<UserSignup> {
       email: _email.text,
       first_name: _firstname.text,
       last_name: _lastName.text,
+      is_staff: "false",
     );
 
     http.Response response =

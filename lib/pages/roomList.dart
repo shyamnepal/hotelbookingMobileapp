@@ -1,12 +1,14 @@
-// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/Login/home.dart';
 import 'package:hotelbooking/Login/login.dart';
 import 'package:hotelbooking/component/card.dart';
 import 'package:hotelbooking/pages/detailsscreen.dart';
+import 'package:hotelbooking/pages/roomlistaftersearch.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,9 +18,49 @@ class RoomList extends StatefulWidget {
 }
 
 class _RoomListState extends State<RoomList> {
+  // String? token;
+  // void getcred() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     token = pref.getString("jwt");
+  //   });
+  // }
+
+  Future searchroom(String text) async {
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2:8000/api/filterHotel/?search=${text}'));
+
+    if (response.statusCode == 200) {
+      final roomdata = json.decode(response.body);
+
+      return roomdata;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load search hotel');
+    }
+  }
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchRoomData();
+    // getcred();
+  }
+
   Future fetchRoomData() async {
-    final response =
-        await http.get(Uri.parse('http://10.0.2.2:8000/api/room-details/'));
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    var token = pref.getString("jwt");
+
+    print("the token is null fjrjfioj iojfoi");
+    print(token);
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2:8000/api/room-details/'), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
 
     if (response.statusCode == 200) {
       final ConvertDataJSON = json.decode(response.body);
@@ -27,18 +69,8 @@ class _RoomListState extends State<RoomList> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load HotelRoom');
     }
-  }
-
-  DateTimeRange daterange =
-      DateTimeRange(start: DateTime(2022, 1, 1), end: DateTime(2022, 12, 24));
-
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fetchRoomData();
-    getcred();
   }
 
   double height = 0;
@@ -52,18 +84,13 @@ class _RoomListState extends State<RoomList> {
     });
   }
 
-  String token = "";
-  void getcred() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      token = pref.getString("login")!;
-    });
-  }
+  TextEditingController adult = new TextEditingController();
+  TextEditingController childer = new TextEditingController();
+
+  DateTime datetime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    final start = daterange.start;
-    final end = daterange.end;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -204,7 +231,7 @@ class _RoomListState extends State<RoomList> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Text("Token is ${token}"),
+              // Text("Token is ${token}"),
               InkWell(
                 onTap: () {
                   showDialog(
@@ -213,7 +240,7 @@ class _RoomListState extends State<RoomList> {
                         return Dialog(
                           child: Container(
                             height: 550,
-                            width: width * 8,
+                            width: width * 9,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
@@ -253,16 +280,16 @@ class _RoomListState extends State<RoomList> {
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xff3C4657),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      height: 50,
-                                      width: 50,
-                                      child: const Icon(Icons.filter_alt,
-                                          size: 35, color: Colors.white),
-                                    ),
+                                    // Container(
+                                    //   decoration: BoxDecoration(
+                                    //     color: const Color(0xff3C4657),
+                                    //     borderRadius: BorderRadius.circular(8),
+                                    //   ),
+                                    //   height: 50,
+                                    //   width: 50,
+                                    //   child: const Icon(Icons.filter_alt,
+                                    //       size: 35, color: Colors.white),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -274,48 +301,30 @@ class _RoomListState extends State<RoomList> {
                                 children: [
                                   Container(
                                     height: 80,
-                                    width: 140,
+                                    width: 240,
                                     decoration: BoxDecoration(
                                       color: Colors.grey[100],
                                     ),
                                     child: Column(children: [
-                                      Text(
-                                          "${start.year}/${start.month}/${start.day}",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      TextButton(
-                                          onPressed: () {
-                                            pickDateRange();
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 30),
+                                        child: InkWell(
+                                          onTap: () {
+                                            selectDate();
                                           },
-                                          child: Text("Check in"))
-                                    ]),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: Container(
-                                      height: 80,
-                                      width: 140,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
+                                          child: Text(
+                                              '${datetime.year}/${datetime.month}/${datetime.day}',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
                                       ),
-                                      child: Column(children: [
-                                        Text(
-                                            "${end.year}/${end.month}/${end.day}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        TextButton(
-                                            onPressed: () {
-                                              pickDateRange();
-                                            },
-                                            child: Text("Check in",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold)))
-                                      ]),
-                                    ),
+                                      // Text(
+                                      //     '${datetime.year}/${datetime.month}/${datetime.day}',
+                                      //     style: TextStyle(
+                                      //         fontSize: 16,
+                                      //         fontWeight: FontWeight.bold)),
+                                    ]),
                                   ),
                                 ],
                               ),
@@ -333,6 +342,7 @@ class _RoomListState extends State<RoomList> {
                                     ),
                                     child: Column(children: [
                                       TextField(
+                                        controller: adult,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: 20,
@@ -358,6 +368,7 @@ class _RoomListState extends State<RoomList> {
                                       ),
                                       child: Column(children: [
                                         TextField(
+                                          controller: childer,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold),
@@ -382,7 +393,16 @@ class _RoomListState extends State<RoomList> {
                                 width: width * .6,
                                 height: 50,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var data = await searchroom(adult.text);
+
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                roomListAfterSearch(
+                                                    data: data)));
+                                  },
                                   child: const Text('Submint'),
                                   style: ElevatedButton.styleFrom(
                                       primary: const Color(0xff40cd7d),
@@ -470,6 +490,8 @@ class _RoomListState extends State<RoomList> {
                                               hotelName:
                                                   '${data[index]['room_type']}',
                                               hotelLocation:
+                                                  '${data[index]['hotelID']['hotel_location']}',
+                                              hotelPrice:
                                                   '${data[index]['room_price']}')));
                                 },
                                 child: DiscoverCard(
@@ -492,14 +514,16 @@ class _RoomListState extends State<RoomList> {
         ));
   }
 
-  Future pickDateRange() async {
-    DateTimeRange? newDateRange = await showDateRangePicker(
-        context: context,
-        initialDateRange: daterange,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2022));
-    if (newDateRange == null) return;
-
-    setState(() => daterange = newDateRange);
+  selectDate() async {
+    DateTime? newDate = await showDatePicker(
+      context: context,
+      initialDate: datetime,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2023),
+    );
+    if (newDate == null) return;
+    setState(() {
+      datetime = newDate;
+    });
   }
 }

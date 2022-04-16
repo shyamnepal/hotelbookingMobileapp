@@ -3,9 +3,12 @@ import 'package:hotelbooking/Login/login.dart';
 import 'package:hotelbooking/Login/user_signup.dart';
 import 'package:hotelbooking/pages/homepage.dart';
 import 'package:hotelbooking/pages/hotel_info.dart';
+import 'package:hotelbooking/pages/onboardingpage/onbordin.dart';
+import 'package:hotelbooking/pages/splashscreen/splashscreen.dart';
 import 'package:hotelbooking/pages/viewhotelinfo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -21,8 +24,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/login',
+        initialRoute: '/splashScreen',
         routes: {
+          '/splashScreen': (context) => SplashScreen(),
+          '/onboarding': (context) => OnBoardingPage(),
           '/login': (context) => Login(),
           '/usersignup': (context) => UserSignup(),
           '/homepage': (context) => HomePage(),
