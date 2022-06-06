@@ -1,59 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/pages/customerdetailsforbooking.dart';
 import 'package:hotelbooking/pages/profile.dart';
+import 'package:hotelbooking/pages/roomList.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailsScreen1 extends StatelessWidget {
   //const DetailScreen({Key? key}) : super(key: key);
 
   final imageUrl;
   final hotelName;
   final hotelLocation;
   final hotelPrice;
-  final hotelId;
-  final roomNumber;
-  DetailScreen(
-      {this.imageUrl,
-      this.hotelName,
-      this.hotelLocation,
-      this.hotelPrice,
-      this.hotelId,
-      this.roomNumber});
+
+  DetailsScreen1(
+      {this.imageUrl, this.hotelName, this.hotelLocation, this.hotelPrice});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Rs ${hotelPrice}",
-              style: TextStyle(fontSize: 30),
+              "Price: per/hrs ${hotelPrice}",
+              style: TextStyle(fontSize: 17),
             ),
-            Container(
-              height: 60,
-              child: MaterialButton(
-                minWidth: MediaQuery.of(context).size.width * .4,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CustomerDetailsAfterBooking(
-                                totalPrice: double.parse(hotelPrice),
-                                roomNumber: int.parse(roomNumber),
-                                hotelId: int.parse(hotelId),
-                              )));
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                color: Color(0xff3C4657),
-                child: const Text(
-                  "Select room",
-                  style: TextStyle(fontSize: 22, color: Colors.white),
-                ),
-              ),
-            )
+            // Container(
+            //   height: 60,
+            //   child: MaterialButton(
+            //     minWidth: MediaQuery.of(context).size.width * .4,
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) =>
+            //                   const CustomerDetailsAfterBooking()));
+            //     },
+            //     shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(12)),
+            //     color: Color(0xff3C4657),
+            //     child: const Text(
+            //       "Select room",
+            //       style: TextStyle(fontSize: 22, color: Colors.white),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),

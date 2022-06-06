@@ -24,9 +24,6 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Padding(
           padding: const EdgeInsets.only(top: 150, left: 100),
           child: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('image/splashscreen.jpeg'))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: const [

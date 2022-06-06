@@ -1,12 +1,15 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/Login/home.dart';
 import 'package:hotelbooking/Login/login.dart';
 import 'package:hotelbooking/component/card.dart';
+import 'package:hotelbooking/pages/booking.dart';
+import 'package:hotelbooking/pages/detailsscreen%20copy.dart';
 import 'package:hotelbooking/pages/detailsscreen.dart';
 import 'package:hotelbooking/pages/roomlistaftersearch.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +40,7 @@ class _RoomListState extends State<RoomList> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load search hotel');
+      Text('Failed to load search hotel');
     }
   }
 
@@ -69,7 +72,7 @@ class _RoomListState extends State<RoomList> {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load HotelRoom');
+      // throw Exception('Failed to load HotelRoom');
     }
   }
 
@@ -84,6 +87,7 @@ class _RoomListState extends State<RoomList> {
     });
   }
 
+  TextEditingController hotelLocation = new TextEditingController();
   TextEditingController adult = new TextEditingController();
   TextEditingController childer = new TextEditingController();
 
@@ -127,22 +131,22 @@ class _RoomListState extends State<RoomList> {
         drawer: Drawer(
           child: ListView(
             children: [
-              UserAccountsDrawerHeader(
-                accountName: Text('Shyam Nepal'),
-                accountEmail: Text('shyamnepal567@gmail.com'),
-                currentAccountPicture: GestureDetector(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                decoration: const BoxDecoration(
-                  color: Color(0xff40cd7d),
-                ),
-              ),
+              // UserAccountsDrawerHeader(
+              //   accountName: Text('Shyam Nepal'),
+              //   accountEmail: Text('shyamnepal567@gmail.com'),
+              //   currentAccountPicture: GestureDetector(
+              //     child: CircleAvatar(
+              //       backgroundColor: Colors.white,
+              //       child: Icon(
+              //         Icons.person,
+              //         color: Colors.black,
+              //       ),
+              //     ),
+              //   ),
+              //   decoration: const BoxDecoration(
+              //     color: Color(0xff40cd7d),
+              //   ),
+              // ),
               InkWell(
                 onTap: () {
                   // Navigator.pushNamed(context, '/homepage');
@@ -165,32 +169,34 @@ class _RoomListState extends State<RoomList> {
                   ),
                 ),
               ),
+              // InkWell(
+              //   onTap: () {
+              //     Navigator.pushNamed(context, '/hotelinformation');
+              //   },
+              //   child: const ListTile(
+              //     title: Text('Hotel information'),
+              //     leading: Icon(
+              //       Icons.shopping_basket,
+              //       color: Colors.red,
+              //     ),
+              //   ),
+              // ),
+              // InkWell(
+              //   onTap: () {},
+              //   child: const ListTile(
+              //     title: Text('room information'),
+              //     leading: Icon(
+              //       Icons.category,
+              //       color: Colors.red,
+              //     ),
+              //   ),
+              // ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/hotelinformation');
+                  //Navigator.push(context, MaterialPageRoute(builder: (BuildContext)=> Bookings(BookingsDetails: BookingsDetails, id: id)))
                 },
                 child: const ListTile(
-                  title: Text('Hotel information'),
-                  leading: Icon(
-                    Icons.shopping_basket,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: const ListTile(
-                  title: Text('room information'),
-                  leading: Icon(
-                    Icons.category,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: const ListTile(
-                  title: Text('view Hotel information'),
+                  title: Text('view Booking'),
                   leading: Icon(
                     Icons.favorite,
                     color: Colors.red,
@@ -256,6 +262,7 @@ class _RoomListState extends State<RoomList> {
                                     Container(
                                       width: width * .5,
                                       child: TextField(
+                                        controller: hotelLocation,
                                         decoration: InputDecoration(
                                           hintText: "Search for place",
                                           prefixIcon: const Icon(
@@ -335,7 +342,7 @@ class _RoomListState extends State<RoomList> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: 80,
+                                    height: 75,
                                     width: 140,
                                     decoration: BoxDecoration(
                                       color: Colors.grey[100],
@@ -351,7 +358,7 @@ class _RoomListState extends State<RoomList> {
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
                                             disabledBorder: InputBorder.none,
-                                            errorText: "           Adult",
+                                            errorText: "hours",
                                             errorStyle: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 14)),
@@ -377,7 +384,7 @@ class _RoomListState extends State<RoomList> {
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
                                               disabledBorder: InputBorder.none,
-                                              errorText: "           children",
+                                              errorText: "Number of guest",
                                               errorStyle: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 14,
@@ -394,14 +401,29 @@ class _RoomListState extends State<RoomList> {
                                 height: 50,
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    var data = await searchroom(adult.text);
+                                    SharedPreferences pref =
+                                        await SharedPreferences.getInstance();
+                                    await pref.setString(
+                                        "bookdate", datetime.toString());
+                                    await pref.setInt(
+                                        "hours", int.parse(adult.text));
 
+                                    await pref.setInt("numberOfGuest",
+                                        int.parse(childer.text));
+                                    var data =
+                                        await searchroom(hotelLocation.text);
+                                    int totalHours = int.parse(adult.text);
+                                    print(
+                                        'the value of price is ${totalHours}');
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 roomListAfterSearch(
-                                                    data: data)));
+                                                  data: data,
+                                                  datetime: datetime,
+                                                  hours: totalHours,
+                                                )));
                                   },
                                   child: const Text('Submint'),
                                   style: ElevatedButton.styleFrom(
@@ -484,7 +506,7 @@ class _RoomListState extends State<RoomList> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => DetailScreen(
+                                          builder: (context) => DetailsScreen1(
                                               imageUrl: 'http://10.0.2.2:8000  ' +
                                                   '${data[index]['roomImage']}',
                                               hotelName:

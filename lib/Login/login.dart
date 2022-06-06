@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotelbooking/Login/home.dart';
 import 'package:hotelbooking/auth/restpassword.dart';
 import 'package:hotelbooking/pages/homepage.dart';
@@ -19,6 +20,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   double height = 0;
   double width = 0;
 
@@ -61,119 +63,144 @@ class _LoginState extends State<Login> {
       backgroundColor: Color(0xff202443),
       body: SafeArea(
           child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: height * .1, right: width * .6),
-              child: Text(
-                'Welcome \nBack',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-
-            //Text fields for login
-            Padding(
-              padding: EdgeInsets.only(
-                  top: height * .08, left: width * .04, right: width * .04),
-              child: TextFormField(
-                style: TextStyle(color: Colors.white),
-                controller: usernameController,
-                decoration: InputDecoration(
-                  fillColor: Color(0xff242846),
-                  filled: true,
-                  hintText: 'user name',
-                  hintStyle: const TextStyle(color: Colors.white, fontSize: 15),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide:
-                        const BorderSide(color: Color(0xff202443), width: 2.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide:
-                        const BorderSide(color: Color(0xff202443), width: 2.0),
-                  ),
+        child: Form(
+          key: formkey,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: height * .1, right: width * .6),
+                child: Text(
+                  'Welcome \nBack',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
                 ),
               ),
-            ),
 
-            // Text field of password
-
-            Padding(
-              padding: EdgeInsets.only(
-                  top: height * .04, left: width * .04, right: width * .04),
-              child: TextFormField(
-                style: TextStyle(color: Colors.white),
-                controller: passwordController,
-                decoration: InputDecoration(
-                  fillColor: Color(0xff242846),
-                  filled: true,
-                  hintText: 'Password',
-                  hintStyle: const TextStyle(color: Colors.white, fontSize: 15),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide:
-                        const BorderSide(color: Color(0xff202443), width: 2.0),
+              //Text fields for login
+              Padding(
+                padding: EdgeInsets.only(
+                    top: height * .08, left: width * .04, right: width * .04),
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xff242846),
+                    filled: true,
+                    hintText: 'user name',
+                    hintStyle:
+                        const TextStyle(color: Colors.white, fontSize: 15),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                          color: Color(0xff202443), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                          color: Color(0xff202443), width: 2.0),
+                    ),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide:
-                        const BorderSide(color: Color(0xff202443), width: 2.0),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: width * .6, top: height * .02),
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResetPassword()));
+                  // validator: RequiredValidator(errorText: " Required"),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Required";
+                    } else {
+                      return null;
+                    }
                   },
-                  child: Text(
-                    'forget password?',
-                    style: TextStyle(color: Color(0xff40cd7d)),
-                  )),
-            ),
-
-            SizedBox(
-              height: height * .06,
-            ),
-
-            //login button
-
-            SizedBox(
-              width: width * .8,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  login();
-                },
-                child: const Text('login'),
-                style: ElevatedButton.styleFrom(
-                    primary: const Color(0xff40cd7d),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
+                ),
               ),
-            ),
 
-            SizedBox(
-              height: height * .1,
-            ),
-            RichText(
-                text: TextSpan(children: [
-              TextSpan(text: 'new users? '),
-              TextSpan(
-                  text: "signup",
-                  style: TextStyle(color: Color(0xff40cd7d)),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Navigator.pushNamed(context, '/usersignup');
-                    })
-            ])),
-          ],
+              // Text field of password
+
+              Padding(
+                padding: EdgeInsets.only(
+                    top: height * .04, left: width * .04, right: width * .04),
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xff242846),
+                    filled: true,
+                    hintText: 'Password',
+                    hintStyle:
+                        const TextStyle(color: Colors.white, fontSize: 15),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                          color: Color(0xff202443), width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(
+                          color: Color(0xff202443), width: 2.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Required";
+                    } else if (value.length < 8) {
+                      return "Password must be atleast 8 characters long";
+                    } else {
+                      return null;
+                    }
+                  },
+                  // validator: RequiredValidator(errorText: " Required"),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: width * .6, top: height * .02),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ResetPassword()));
+                    },
+                    child: Text(
+                      'forget password?',
+                      style: TextStyle(color: Color(0xff40cd7d)),
+                    )),
+              ),
+
+              SizedBox(
+                height: height * .06,
+              ),
+
+              //login button
+
+              SizedBox(
+                width: width * .8,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (formkey.currentState!.validate()) {
+                      login();
+                    }
+                  },
+                  child: const Text('login'),
+                  style: ElevatedButton.styleFrom(
+                      primary: const Color(0xff40cd7d),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
+                ),
+              ),
+
+              SizedBox(
+                height: height * .1,
+              ),
+              RichText(
+                  text: TextSpan(children: [
+                TextSpan(text: 'new users? '),
+                TextSpan(
+                    text: "signup",
+                    style: TextStyle(color: Color(0xff40cd7d)),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.pushNamed(context, '/usersignup');
+                      })
+              ])),
+            ],
+          ),
         ),
       )),
     );
@@ -189,7 +216,6 @@ class _LoginState extends State<Login> {
           }));
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
-        print("Login Token" + body["access"]);
 
         //share ppreference to store token
         pageRoute(body['access'], body['id']);
@@ -207,8 +233,17 @@ class _LoginState extends State<Login> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString("jwt", token);
     await pref.setString("id", id.toString());
-
+    showToast();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => RoomList()), (route) => false);
+  }
+
+  void showToast() {
+    Fluttertoast.showToast(
+        msg: 'sucessfully Login to your Account',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.green,
+        textColor: Colors.white);
   }
 }

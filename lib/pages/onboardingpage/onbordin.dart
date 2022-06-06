@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:hotelbooking/Login/login.dart';
+import 'package:hotelbooking/pages/booking.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({Key? key}) : super(key: key);
@@ -170,7 +172,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       width: 100,
                       child: TextButton(
                           onPressed: () {
-                            // Navigator.pushNamed(context, "/login");
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => Login()),
+                                (route) => false);
                           },
                           child: const Text(
                             "Skip",

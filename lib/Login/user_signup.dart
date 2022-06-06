@@ -2,6 +2,8 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hotelbooking/Login/login.dart';
 import 'package:hotelbooking/Model/usersignup.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +15,7 @@ class UserSignup extends StatefulWidget {
 }
 
 class _UserSignupState extends State<UserSignup> {
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   double height = 0;
   double width = 0;
 
@@ -38,211 +41,269 @@ class _UserSignupState extends State<UserSignup> {
       backgroundColor: Color(0xff202443),
       body: SingleChildScrollView(
         child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: height * .08, right: width * .6),
-                child: Text(
-                  'Signup',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: height * .04, left: width * .04, right: width * .04),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _username,
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff242846),
-                    filled: true,
-                    hintText: 'Username',
-                    hintStyle:
-                        const TextStyle(color: Colors.white, fontSize: 15),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
+          child: Form(
+            key: formkey,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: height * .08, right: width * .6),
+                  child: Text(
+                    'Signup',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
                 ),
-              ),
-
-              //text Fields of last Name
-              Padding(
-                padding: EdgeInsets.only(
-                    top: height * .04, left: width * .04, right: width * .04),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _firstname,
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff242846),
-                    filled: true,
-                    hintText: 'First Name',
-                    hintStyle:
-                        const TextStyle(color: Colors.white, fontSize: 15),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: height * .04, left: width * .04, right: width * .04),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    controller: _username,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xff242846),
+                      filled: true,
+                      hintText: 'Username',
+                      hintStyle:
+                          const TextStyle(color: Colors.white, fontSize: 15),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Required";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                 ),
-              ),
 
-              //text Fields of last Name
-              Padding(
-                padding: EdgeInsets.only(
-                    top: height * .04, left: width * .04, right: width * .04),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _lastName,
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff242846),
-                    filled: true,
-                    hintText: 'Last Name',
-                    hintStyle:
-                        const TextStyle(color: Colors.white, fontSize: 15),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
+                //text Fields of last Name
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: height * .04, left: width * .04, right: width * .04),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    controller: _firstname,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xff242846),
+                      filled: true,
+                      hintText: 'First Name',
+                      hintStyle:
+                          const TextStyle(color: Colors.white, fontSize: 15),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Required";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                 ),
-              ),
 
-              //text Fields of Eamil
-              Padding(
-                padding: EdgeInsets.only(
-                    top: height * .04, left: width * .04, right: width * .04),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _email,
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff242846),
-                    filled: true,
-                    hintText: 'E-mail',
-                    hintStyle:
-                        const TextStyle(color: Colors.white, fontSize: 15),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
+                //text Fields of last Name
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: height * .04, left: width * .04, right: width * .04),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    controller: _lastName,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xff242846),
+                      filled: true,
+                      hintText: 'Last Name',
+                      hintStyle:
+                          const TextStyle(color: Colors.white, fontSize: 15),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Required";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                 ),
-              ),
 
-              //text Fields of Password
-              Padding(
-                padding: EdgeInsets.only(
-                    top: height * .04, left: width * .04, right: width * .04),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _password,
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff242846),
-                    filled: true,
-                    hintText: 'Password',
-                    hintStyle:
-                        const TextStyle(color: Colors.white, fontSize: 15),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
+                //text Fields of Eamil
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: height * .04, left: width * .04, right: width * .04),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    controller: _email,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xff242846),
+                      filled: true,
+                      hintText: 'E-mail',
+                      hintStyle:
+                          const TextStyle(color: Colors.white, fontSize: 15),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Required";
+                      } else if (!RegExp(
+                              r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                          .hasMatch(value)) {
+                        return "Validate email address";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                 ),
-              ),
 
-              //text Fields of Password
-              Padding(
-                padding: EdgeInsets.only(
-                    top: height * .04, left: width * .04, right: width * .04),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  controller: _confirmPassword,
-                  cursorColor: Colors.white,
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff242846),
-                    filled: true,
-                    hintText: 'Confirm Password',
-                    hintStyle:
-                        const TextStyle(color: Colors.white, fontSize: 15),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
+                //text Fields of Password
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: height * .04, left: width * .04, right: width * .04),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    controller: _password,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xff242846),
+                      filled: true,
+                      hintText: 'Password',
+                      hintStyle:
+                          const TextStyle(color: Colors.white, fontSize: 15),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                          color: Color(0xff202443), width: 2.0),
-                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Required";
+                      } else if (value.length < 8) {
+                        return "Password must be atleast 8 characters long";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                 ),
-              ),
 
-              SizedBox(
-                height: 20,
-              ),
-              //Signup button
-
-              SizedBox(
-                width: width * .8,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    RegisterProduct();
-                  },
-                  child: const Text('Sign Up'),
-                  style: ElevatedButton.styleFrom(
-                      primary: const Color(0xff40cd7d),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30))),
+                //text Fields of Password
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: height * .04, left: width * .04, right: width * .04),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    controller: _confirmPassword,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                      fillColor: Color(0xff242846),
+                      filled: true,
+                      hintText: 'Confirm Password',
+                      hintStyle:
+                          const TextStyle(color: Colors.white, fontSize: 15),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            color: Color(0xff202443), width: 2.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Required";
+                      } else if (value.length < 8) {
+                        return "Password must be atleast 8 characters long";
+                      } else if (value != _password.text) {
+                        return "Password not match";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RichText(
-                  text: TextSpan(children: [
-                TextSpan(text: 'Already Have a account? '),
-                TextSpan(
-                    text: "Login",
-                    style: TextStyle(color: Color(0xff40cd7d)),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.pushNamed(context, '/login');
-                      })
-              ])),
-            ],
+
+                SizedBox(
+                  height: 20,
+                ),
+                //Signup button
+
+                SizedBox(
+                  width: width * .8,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (formkey.currentState!.validate()) {
+                        RegisterProduct();
+                      }
+                    },
+                    child: const Text('Sign Up'),
+                    style: ElevatedButton.styleFrom(
+                        primary: const Color(0xff40cd7d),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30))),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                RichText(
+                    text: TextSpan(children: [
+                  TextSpan(text: 'Already Have a account? '),
+                  TextSpan(
+                      text: "Login",
+                      style: TextStyle(color: Color(0xff40cd7d)),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushNamed(context, '/login');
+                        })
+                ])),
+              ],
+            ),
           ),
         ),
       ),
@@ -272,11 +333,25 @@ class _UserSignupState extends State<UserSignup> {
     http.Response response =
         await http.post(Uri.parse(APIURL), body: model.toJson());
     print(model.toJson());
-    if (response.statusCode == 200) {
-      print("value add");
+    print(response);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Invalid Credentails.")));
+      showToast();
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()), (route) => false);
     } else {
       print("exception occor $response");
       print(response.statusCode);
     }
+  }
+
+  void showToast() {
+    Fluttertoast.showToast(
+        msg: 'sucessfully Create user Account',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.green,
+        textColor: Colors.white);
   }
 }
